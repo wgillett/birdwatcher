@@ -36,6 +36,15 @@ Persisted data (`store.py`), two tables:
   This is the per-frame evidence the visit's verdict is computed from, and the finer-grained
   record for re-scoring history against a better classifier later.
 
+Multiple birds in one frame: there is no per-bird tracking or identity. `Pipeline.process`
+opens/extends a single visit per frame, not per detection, so when the detector returns several
+boxes in the same frame, each still gets its own `observation` row, but all of them feed into
+that one open visit's vote tally. Two different species sharing a frame are pooled into one
+visit with one (possibly wrong) species verdict; `best_crop_path` still picks a real bird (the
+single highest `det_score * probability` observation), just not necessarily one representative
+of every bird present. The `observation` table keeps the per-bird-per-frame ground truth, so
+nothing is lost, but the `visit` summary can be misleading for concurrent birds.
+
 Package layout (`src/bird/`):
 - `frames.py` - `FrameSource` protocol; `CameraSource` (OpenCV), `DirectorySource` (tests/replay)
 - `motion.py` - `MotionGate`
