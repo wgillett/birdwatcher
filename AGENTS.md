@@ -22,6 +22,20 @@ Decisions:
 - Each stage is a Protocol with a trivial stub implementation, so the whole loop runs on the
   Mac with a directory of images and no model. `bird replay <dir>` does this.
 
+Persisted data (`store.py`), two tables:
+- **Visit** - one bird's stay in frame, start to close. Opened on the first confirmed detection;
+  extended as long as detections keep arriving within `debounce_seconds`; closed (`end` set)
+  once that window elapses with no further detection. `species`/`confidence` are the visit's
+  verdict - a vote across its observations' predictions, weighted by `det_score * probability`
+  (see `OpenVisit.record`/`verdict` in `pipeline.py`) - and `best_crop_path` points at the single
+  highest-scoring crop, used as the visit's representative image. `detector_id`/`classifier_id`
+  record which models produced it.
+- **Observation** - one detection within a visit: a single frame's bounding box (`x, y, w, h`),
+  detector confidence (`det_score`), classifier output for that frame's crop (`species`, `prob`),
+  and that frame's own `crop_path`. Many observations roll up into one visit via `visit_id`.
+  This is the per-frame evidence the visit's verdict is computed from, and the finer-grained
+  record for re-scoring history against a better classifier later.
+
 Package layout (`src/bird/`):
 - `frames.py` - `FrameSource` protocol; `CameraSource` (OpenCV), `DirectorySource` (tests/replay)
 - `motion.py` - `MotionGate`
