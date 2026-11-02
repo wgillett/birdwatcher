@@ -219,3 +219,6 @@ __marimo__/
 
 # birdwatcher runtime data (SQLite db and saved crops)
 data/
+
+# macOS
+.DS_Store

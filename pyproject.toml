@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "click>=8.5.0",
+    "onnxruntime>=1.31.1",
     "opencv-python>=4.13",
     "pydantic-settings>=2.15.0",
 ]
@@ -38,6 +39,10 @@ select = ["E", "F", "I", "UP"]
 python_version = "3.13"
 strict = true
 files = ["src", "tests", "scripts"]
+
+[[tool.mypy.overrides]]
+module = "onnxruntime"
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
