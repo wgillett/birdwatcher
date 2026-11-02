@@ -107,6 +107,7 @@ Tools:
 - Which small detector (YOLO-nano "bird" class vs purpose-trained) and which species classifier
   (NABirds / iNaturalist-trained). Benchmark on the Linux box before committing.
   v1 detector decision: see [`docs/decisions/0001-bird-detector-yolo-onnx.md`](docs/decisions/0001-bird-detector-yolo-onnx.md).
+  v1 classifier decision: see [`docs/decisions/0002-species-classifier-nabirds.md`](docs/decisions/0002-species-classifier-nabirds.md).
 - Capture settings on Linux V4L2 (MJPEG fourcc, 1080p) vs Mac AVFoundation.
 - Image retention policy for `data/crops`.
 - Ground-truth labeling for evaluation (a small hand-labeled crop set).

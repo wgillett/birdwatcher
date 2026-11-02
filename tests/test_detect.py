@@ -14,7 +14,7 @@ MODEL_PATH = REPO_ROOT / "models" / "yolo11n.onnx"
 PHOTOS_DIR = REPO_ROOT / "tests" / "fixtures" / "real_photos"
 
 bird_photos = sorted(PHOTOS_DIR.glob("bird_*.*")) if PHOTOS_DIR.is_dir() else []
-NUM_BIRD_PHOTOS = 4
+NUM_BIRD_PHOTOS = 11
 assert len(bird_photos) >= NUM_BIRD_PHOTOS, (
     f"Fewer than {NUM_BIRD_PHOTOS} bird photos found in {PHOTOS_DIR}"
 )
@@ -51,6 +51,14 @@ def test_no_bird_detected_in_empty_photo(detector: YoloOnnxDetector, path: Path)
 
 def test_detects_two_birds_in_same_frame(detector: YoloOnnxDetector) -> None:
     path = PHOTOS_DIR / "bird_two_blue_jays.jpg"
+    assert path.is_file(), f"expected fixture missing: {path}"
+    detections = detector.detect(_load(path))
+    assert len(detections) == 2
+    assert all(d.label == "bird" and d.score >= detector.conf_threshold for d in detections)
+
+
+def test_detects_two_birds_in_goldfinches_photo(detector: YoloOnnxDetector) -> None:
+    path = PHOTOS_DIR / "bird_male_and_femaled_goldfinches.jpg"
     assert path.is_file(), f"expected fixture missing: {path}"
     detections = detector.detect(_load(path))
     assert len(detections) == 2
